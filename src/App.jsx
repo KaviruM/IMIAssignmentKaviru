@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import './App.css'
 import Assignment_1 from './assignments/Assignment_1.jsx'
 import Assignment_2 from './assignments/Assignment_2.jsx'
@@ -11,10 +9,6 @@ import Assignment_5 from './assignments/Assignment_5.jsx'
 import Assignment_6 from './assignments/Assignment_6.jsx'
 import Assignment_7 from './assignments/Assignment_7.jsx'
 import Assignment_8 from './assignments/Assignment_8.jsx'
-// Import other assignments as you create them
-// import Assignment_2 from './assignments/Assignment_2'
-// import Assignment_3 from './assignments/Assignment_3'
-// etc.
 
 function HomePage() {
   return (
