@@ -1,11 +1,12 @@
 {
   "name": "arimac-assignments",
-  "homepage": "https://KaviruM.github.io/KaviruArimacAssignment/",
+  "homepage": "https://KaviruM.github.io/ArimacAssignmentKaviru/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "start": "react-scripts start",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
