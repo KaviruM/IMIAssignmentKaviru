@@ -144,30 +144,23 @@
   border: 1px solid #e9ecef;
 }
 
-/* Instructions */
 .instructions {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #e9ecef;
-  border-radius: 5px;
   font-size: 14px;
+  color: #000000;
+  margin-bottom: 20px;
 }
 
-.instructions h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.checkbox-container input {
+  margin-right: 10px;
+}
+
+.checkbox-label {
+  font-size: 14px;
   color: #333;
-}
-
-.instructions p {
-  margin-bottom: 8px;
-}
-
-.instructions a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-.instructions a:hover {
-  text-decoration: underline;
 }
