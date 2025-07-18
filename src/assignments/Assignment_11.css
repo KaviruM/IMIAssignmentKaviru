@@ -164,3 +164,13 @@
   font-size: 14px;
   color: #333;
 }
+
+.user-name {
+  font-weight: bold;
+  color: #000000;
+}
+
+.user-bio {
+  font-style: italic;
+  color: #000000;
+}
