@@ -3,172 +3,125 @@ import axios from 'axios';
 import './Assignment_11.css';
 
 function Assignment_11() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [userDetails, setUserDetails] = useState(null);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [userData, setUserData] = useState(null);
+    const [keepLoggedIn, setKeepLoggedIn] = useState(false);
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      setMessage('Please enter both email and password');
-      return;
-    }
-
-    setLoading(true);
-    setMessage('');
     
-    try {
 
-      const response = await axios.post('https://auth.dnjs.lk/api/login', {
-        email,
-        password
-      });
+    const handleLogin = async (e) => {
+        e.preventDefault();
 
-      const data = response.data;
-      const token = data.token || data.access_token;
-      
-      if (token) {
-        setMessage('Login successful!');
-        
+        if (!email || !password) {
+            setError('Email and password are required');
+            return;
+        }
 
-        const userResponse = await axios.get('https://auth.dnjs.lk/api/user', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        setUserDetails(userResponse.data);
-      }
-    } catch (error) {
-      if (error.response) {
+        setError(null);
+        setLoading(true);
+        setSuccess(false);
 
-        setMessage('Login failed. Please check your credentials.');
-      } else {
+        try {
+            const response = await axios.post('https://auth.dnjs.lk/api/login', {
+                email: email,
+                password: password
+            });
 
-        setMessage('Network error. Please try again.');
-      }
-    }
-    
-    setLoading(false);
-  };
+            const token = response.data.access_token;
 
-  const handleLogout = () => {
-    setUserDetails(null);
-    setEmail('');
-    setPassword('');
-    setMessage('');
-  };
+            const userResponse = await axios.get('https://auth.dnjs.lk/api/user', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            console.log('Full user data:', userResponse.data);
+
+            setUserData(userResponse.data);
+            setSuccess(true);
+            setLoading(false);
+
+        } catch (error) {
+            console.error('Error during login:', error);
+            setError('Login failed. Please check your credentials.');
+            setLoading(false);
+        }
+    };
+
+    const getBio = (data) => {
+        return data.profile_description || data.bio || data.description || data.about || 'No bio available';
+    };
 
 
-  if (userDetails) {
-    return (
-      <div className="login-container">
-        <h2 className="login-title">Welcome!</h2>
-        
-        {message && (
-          <div className="success-message">
-            <strong>Success:</strong> {message}
-          </div>
-        )}
+    const getProfileImage = (data) => {
+        return data.profile_pic || data.avatar || data.image || data.photo_url || 'https://via.placeholder.com/150';
+    };
 
-        <div className="user-details">
-          <h3>Your Details:</h3>
-          
-
-          {userDetails.profile_picture && (
-            <img 
-              src={userDetails.profile_picture} 
-              alt="Profile" 
-              className="profile-picture"
-            />
-          )}
-          
-
-          {userDetails.name && (
-            <div className="user-name">{userDetails.name}</div>
-          )}
-          
-
-          {userDetails.bio && (
-            <div className="user-bio">
-              <strong>Bio:</strong> {userDetails.bio}
+    if (userData) {
+        return (
+            <div className="assignment-11">
+                <h2>Assignment 11: User Profile</h2>
+                <div className="user-profile">
+                    <div className="profile-header">
+                        <img
+                            src={getProfileImage(userData)}
+                            alt="Profile"
+                            className="profile-pic"
+                        />
+                        <h3>{userData.name || 'No name provided'}</h3>
+                    </div>
+                    <div className="profile-details">
+                        <p><strong>Email:</strong> {userData.email || 'Not provided'}</p>
+                        <p><strong>Bio:</strong> {getBio(userData)}</p>
+                    </div>
+                    <button
+                        className="logout-btn"
+                        onClick={() => {
+                            setUserData(null);
+                            setEmail('');
+                            setPassword('');
+                            setSuccess(false);
+                        }}
+                    >
+                        Logout
+                    </button>
+                </div>
             </div>
-          )}
-          
+        );
+    }
 
-          {Object.entries(userDetails).map(([key, value]) => (
-            typeof value === 'string' && key !== 'name' && key !== 'bio' && key !== 'profile_picture' && (
-              <div key={key} className="user-field">
-                <strong>{key}:</strong> {value}
-              </div>
-            )
-          ))}
+    return (
+        <div className="assignment-11">
+            <h2>Assignment 11: Axios POST and GET Requests</h2>
+            <form onSubmit={handleLogin}>
+                <div>
+                    <label>Email:</label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Password:</label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Logging in...' : 'Login'}
+                </button>
+            </form>
+            {error && <p className="error">{error}</p>}
+            {success && <p className="success">Login successful!</p>}
         </div>
-
-        <button onClick={handleLogout} className="logout-button">
-          Logout
-        </button>
-
-        <div className="instructions">
-          <h3>Instructions:</h3>
-          <p>1. Create an account at: <a href="https://auth.dnjs.lk/" target="_blank" rel="noopener noreferrer">https://auth.dnjs.lk/</a></p>
-          <p>2. Use your registered email and password to login</p>
-          <p>3. To modify user details, visit the website above and update them</p>
-        </div>
-      </div>
     );
-  }
-
-
-  return (
-    <div className="login-container">
-      <h2 className="login-title">Assignment 11 - JWT Login</h2>
-      
-      <div className="form-group">
-        <label className="form-label">Email:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          className="form-input"
-        />
-      </div>
-
-      <div className="form-group">
-        <label className="form-label">Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter your password"
-          className="form-input"
-        />
-      </div>
-
-      <button
-        onClick={handleLogin}
-        disabled={loading}
-        className={loading ? 'login-button disabled' : 'login-button'}
-      >
-        {loading ? 'Logging in...' : 'Login'}
-      </button>
-
-      {message && (
-        <div className={message.includes('successful') ? 'success-message' : 'error-message'}>
-          <strong>{message.includes('successful') ? 'Success:' : 'Error:'}</strong> {message}
-        </div>
-      )}
-
-      <div className="instructions">
-        <h3>Instructions:</h3>
-        <p>1. Create an account at: <a href="https://auth.dnjs.lk/" target="_blank" rel="noopener noreferrer">https://auth.dnjs.lk/</a></p>
-        <p>2. Use your registered email and password to login</p>
-        <p>3. To modify user details, visit the website above and update them</p>
-      </div>
-    </div>
-  );
 }
 
 export default Assignment_11;

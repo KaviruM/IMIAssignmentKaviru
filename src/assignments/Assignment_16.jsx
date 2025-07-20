@@ -86,6 +86,141 @@ function LoginScreen({ setLoggedIn }) {
     );
 }
 
+function PasswordChangeSection() {
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [reEnterPassword, setReEnterPassword] = useState('');
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const validatePassword = () => {
+        if (!currentPassword || !newPassword || !reEnterPassword) {
+            return 'All fields are required';
+        }
+
+        if (newPassword !== reEnterPassword) {
+            return 'New passwords do not match';
+        }
+
+        if (newPassword.length < 8 || newPassword.length > 40) {
+            return 'Password must be 8-40 characters long';
+        }
+
+        const hasNumber = /\d/.test(newPassword);
+        const hasSpecial = /[*\/\-@#$]/.test(newPassword);
+        const hasLower = /[a-z]/.test(newPassword);
+        const hasUpper = /[A-Z]/.test(newPassword);
+
+        if (!(hasNumber && hasSpecial && hasLower && hasUpper)) {
+            return 'Password must include: number, special character (*/-@#$), lowercase and uppercase letters';
+        }
+
+        return '';
+    };
+
+    const handlePasswordChange = async () => {
+        const validationError = validatePassword();
+        if (validationError) {
+            setError(validationError);
+            setSuccess('');
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+        setSuccess('');
+
+        try {
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+            if (!token) {
+                setError('You are not logged in. Please log in again.');
+                setLoading(false);
+                return;
+            }
+
+            const payload = {
+                current_password: currentPassword,
+                new_password: newPassword,
+                password_confirmation: reEnterPassword
+            };
+
+            const response = await axios.post(
+                'https://auth.dnjs.lk/api/change-password',
+                payload,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            console.log('Password Change Response:', response.data);
+
+            if (response.status === 200 || response.data?.message?.toLowerCase().includes('success')) {
+                setSuccess('Password changed successfully!');
+                setCurrentPassword('');
+                setNewPassword('');
+                setReEnterPassword('');
+            } else {
+                setError(response.data?.message || 'Password change failed.');
+            }
+
+        } catch (error) {
+            console.error('Password change failed:', error.response?.data || error.message);
+            if (error.response?.data?.message) {
+                setError(error.response.data.message);
+            } else {
+                setError('Password change failed. Please try again.');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="password-change-section">
+            <h3>Change Password</h3>
+            <div>
+                <label>Current Password:</label>
+                <input
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="Enter current password"
+                />
+            </div>
+            <div>
+                <label>New Password:</label>
+                <input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter new password"
+                />
+            </div>
+            <div>
+                <label>Re-enter New Password:</label>
+                <input
+                    type="password"
+                    value={reEnterPassword}
+                    onChange={(e) => setReEnterPassword(e.target.value)}
+                    placeholder="Re-enter new password"
+                />
+            </div>
+            <button 
+                onClick={handlePasswordChange}
+                disabled={loading}
+            >
+                {loading ? 'Changing...' : 'Change Password'}
+            </button>
+            {error && <p className="error">{error}</p>}
+            {success && <p className="success">{success}</p>}
+        </div>
+    );
+}
+
 function ProfileScreen({ setLoggedIn }) {
     const [userData, setUserData] = useState(null);
     const [error, setError] = useState(null);
@@ -95,8 +230,6 @@ function ProfileScreen({ setLoggedIn }) {
     const [updateError, setUpdateError] = useState(null);
     const [editName, setEditName] = useState('');
     const [editDescription, setEditDescription] = useState('');
-    
-    // Avatar upload states
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadLoading, setUploadLoading] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -186,10 +319,6 @@ function ProfileScreen({ setLoggedIn }) {
         } catch (error) {
             console.error('Profile update failed:', error);
             setUpdateError('Failed to update profile. Please try again.');
-            if (error.response) {
-                console.error('Error response:', error.response.data);
-                console.error('Error status:', error.response.status);
-            }
         } finally {
             setUpdateLoading(false);
         }
@@ -198,13 +327,11 @@ function ProfileScreen({ setLoggedIn }) {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            // Validate file type
             if (!file.type.startsWith('image/')) {
                 setUploadError('Please select an image file');
                 return;
             }
             
-            // Validate file size (5MB limit)
             if (file.size > 5 * 1024 * 1024) {
                 setUploadError('File size must be less than 5MB');
                 return;
@@ -213,7 +340,6 @@ function ProfileScreen({ setLoggedIn }) {
             setSelectedFile(file);
             setUploadError(null);
             
-            // Create preview
             const reader = new FileReader();
             reader.onload = (e) => {
                 setPreviewUrl(e.target.result);
@@ -241,68 +367,28 @@ function ProfileScreen({ setLoggedIn }) {
         try {
             const formData = new FormData();
             formData.append('avatar', selectedFile);
-            formData.append('profile_pic', selectedFile);
-            formData.append('image', selectedFile);
 
-            let response;
-            
-            // Try different possible endpoints for avatar upload
-            const endpoints = [
-                'https://auth.dnjs.lk/api/avatar',
-                'https://auth.dnjs.lk/api/profile/avatar',
-                'https://auth.dnjs.lk/api/user/avatar',
-                'https://auth.dnjs.lk/api/upload/avatar',
-                'https://auth.dnjs.lk/api/profile-pic'
-            ];
-
-            let uploadSuccessful = false;
-            let lastError = null;
-
-            for (const endpoint of endpoints) {
-                try {
-                    response = await axios.post(endpoint, formData, {
-                        headers: { 
-                            Authorization: `Bearer ${token}`,
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    });
-                    uploadSuccessful = true;
-                    break;
-                } catch (error) {
-                    lastError = error;
-                    // Try PUT method for some endpoints
-                    try {
-                        response = await axios.put(endpoint, formData, {
-                            headers: { 
-                                Authorization: `Bearer ${token}`,
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        });
-                        uploadSuccessful = true;
-                        break;
-                    } catch (putError) {
-                        // Continue to next endpoint
-                        continue;
+            const response = await axios.post(
+                'https://auth.dnjs.lk/api/avatar', 
+                formData,
+                {
+                    headers: { 
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
                     }
                 }
-            }
+            );
 
-            if (!uploadSuccessful) {
-                throw lastError;
-            }
-
-            // Update user data with new avatar
             setUserData(prevData => ({
                 ...prevData,
-                profile_pic: response.data.avatar_url || response.data.profile_pic || response.data.image_url || previewUrl,
-                avatar: response.data.avatar_url || response.data.profile_pic || response.data.image_url || previewUrl
+                profile_pic: response.data.avatar_url || previewUrl,
+                avatar: response.data.avatar_url || previewUrl
             }));
 
             setUploadSuccess(true);
             setSelectedFile(null);
             setPreviewUrl(null);
             
-            // Clear the file input
             const fileInput = document.getElementById('avatar-upload');
             if (fileInput) {
                 fileInput.value = '';
@@ -311,12 +397,7 @@ function ProfileScreen({ setLoggedIn }) {
             setTimeout(() => setUploadSuccess(false), 3000);
 
         } catch (error) {
-            console.error('Avatar upload failed:', error);
             setUploadError('Failed to upload avatar. Please try again.');
-            if (error.response) {
-                console.error('Error response:', error.response.data);
-                console.error('Error status:', error.response.status);
-            }
         } finally {
             setUploadLoading(false);
         }
@@ -337,11 +418,11 @@ function ProfileScreen({ setLoggedIn }) {
     };
 
     const getBio = (data) => {
-        return data.profile_description || data.bio || data.description || data.about || 'No bio available';
+        return data.profile_description || data.bio || data.description || 'No bio available';
     };
 
     const getProfileImage = (data) => {
-        return data.profile_pic || data.avatar || data.image || data.photo_url || 'https://via.placeholder.com/150';
+        return data.profile_pic || data.avatar || 'https://via.placeholder.com/150';
     };
 
     if (loading) {
@@ -365,7 +446,6 @@ function ProfileScreen({ setLoggedIn }) {
                     <p><strong>Bio:</strong> {getBio(userData)}</p>
                 </div>
 
-                {/* Avatar Upload Section */}
                 <div className="avatar-upload-section">
                     <h3>Upload Avatar</h3>
                     <div className="avatar-upload-container">
@@ -406,7 +486,6 @@ function ProfileScreen({ setLoggedIn }) {
                     {uploadError && <p className="error">{uploadError}</p>}
                 </div>
 
-                {/* Profile Edit Section */}
                 <div className="profile-edit-section">
                     <h3>Edit Profile</h3>
                     <form onSubmit={handleProfileUpdate}>
@@ -438,13 +517,15 @@ function ProfileScreen({ setLoggedIn }) {
                     {updateError && <p className="error">{updateError}</p>}
                 </div>
 
+                <PasswordChangeSection />
+
                 <button className="logout-btn" onClick={handleLogout}>Logout</button>
             </div>
         </div>
     );
 }
 
-function Assignment_15() {
+function Assignment_16() {
     const [loggedIn, setLoggedIn] = useState(false);
     const [initialCheckDone, setInitialCheckDone] = useState(false);
 
@@ -467,4 +548,4 @@ function Assignment_15() {
     );
 }
 
-export default Assignment_15;
+export default Assignment_16;

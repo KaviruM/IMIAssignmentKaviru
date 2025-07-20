@@ -2,370 +2,293 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Assignment_11.css';
 
-// Utility function to get token from storage
-const getToken = () => {
-  return localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
-};
+function LoginScreen({ setLoggedIn }) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [keepLoggedIn, setKeepLoggedIn] = useState(false);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
 
-// Utility function to clear tokens
-const clearTokens = () => {
-  localStorage.removeItem('access_token');
-  sessionStorage.removeItem('access_token');
-};
+    const handleLogin = async (e) => {
+        e.preventDefault();
 
-function LoginScreen({ setIsLoggedIn, setUserDetails, setMessage }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [keepLoggedIn, setKeepLoggedIn] = useState(false);
-
-  const handleLogin = async () => {
-    if (!email || !password) {
-      setMessage('Please enter both email and password');
-      return;
-    }
-
-    setLoading(true);
-    setMessage('');
-    
-    try {
-      const response = await axios.post('https://auth.dnjs.lk/api/login', {
-        email,
-        password
-      });
-
-      const token = response.data.token || response.data.access_token;
-      
-      if (token) {
-        // Store token based on checkbox
-        if (keepLoggedIn) {
-          localStorage.setItem('access_token', token);
-        } else {
-          sessionStorage.setItem('access_token', token);
+        if (!email || !password) {
+            setError('Email and password are required');
+            return;
         }
-        
-        // Get user details
-        const userResponse = await axios.get('https://auth.dnjs.lk/api/user', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        
-        setUserDetails(userResponse.data);
-        setIsLoggedIn(true);
-        setMessage('Login successful!');
-      }
-    } catch (error) {
-      setMessage(error.response ? 'Login failed. Please check your credentials.' : 'Network error. Please try again.');
-    }
-    
-    setLoading(false);
-  };
 
-  return (
-    <div className="login-container">
-      <h2 className="login-title">Assignment 14 - Profile Update with Network Tab Study</h2>
-      
-      <div className="form-group">
-        <label className="form-label">Email:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          className="form-input"
-        />
-      </div>
+        setError(null);
+        setLoading(true);
+        setSuccess(false);
 
-      <div className="form-group">
-        <label className="form-label">Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter your password"
-          className="form-input"
-        />
-      </div>
+        try {
+            const response = await axios.post('https://auth.dnjs.lk/api/login', {
+                email,
+                password,
+            });
 
-      <div className="form-group">
-        <label className="checkbox-container">
-          <input
-            type="checkbox"
-            checked={keepLoggedIn}
-            onChange={(e) => setKeepLoggedIn(e.target.checked)}
-            className="checkbox-input"
-          />
-          <span className="checkbox-label">Keep me logged in</span>
-        </label>
-      </div>
+            const token = response.data.access_token;
 
-      <button
-        onClick={handleLogin}
-        disabled={loading}
-        className={loading ? 'login-button disabled' : 'login-button'}
-      >
-        {loading ? 'Logging in...' : 'Login'}
-      </button>
+            if (keepLoggedIn) {
+                localStorage.setItem('token', token);
+            } else {
+                sessionStorage.setItem('token', token);
+            }
 
-      <div className="instructions">
-        <h3>Instructions:</h3>
-        <p>1. Create an account at: <a href="https://auth.dnjs.lk/" target="_blank" rel="noopener noreferrer">https://auth.dnjs.lk/</a></p>
-        <p>2. Use your registered email and password to login</p>
-        <p>3. Check "Keep me logged in" to use localStorage (persistent)</p>
-        <p>4. Uncheck to use sessionStorage (temporary)</p>
-        
-        <h3>Network Tab Study:</h3>
-        <p>• Open Chrome DevTools (F12) and go to Network tab</p>
-        <p>• Login to auth.dnjs.lk and update your profile</p>
-        <p>• Find the profile update API request in Network tab</p>
-        <p>• Check the URL, method (PUT/POST), and request payload</p>
-      </div>
-    </div>
-  );
+            setSuccess(true);
+            setLoggedIn(true);
+        } catch (error) {
+            setError('Login failed. Please check your credentials.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="assignment-11">
+            <h2>Assignment 14: Profile Update with Network Analysis</h2>
+            <form onSubmit={handleLogin}>
+                <div>
+                    <label>Email:</label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Password:</label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={keepLoggedIn}
+                            onChange={(e) => setKeepLoggedIn(e.target.checked)}
+                        /> Keep me logged in
+                    </label>
+                </div>
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Logging in...' : 'Login'}
+                </button>
+            </form>
+            {error && <p className="error">{error}</p>}
+            {success && <p className="success">Login successful!</p>}
+        </div>
+    );
 }
 
-function ProfileScreen({ userDetails, setIsLoggedIn, setUserDetails, setMessage }) {
-  const [loading, setLoading] = useState(false);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+function ProfileScreen({ setLoggedIn }) {
+    const [userData, setUserData] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [updateLoading, setUpdateLoading] = useState(false);
+    const [updateSuccess, setUpdateSuccess] = useState(false);
+    const [updateError, setUpdateError] = useState(null);
+    const [editName, setEditName] = useState('');
+    const [editDescription, setEditDescription] = useState('');
 
-  // Load current user data into form fields
-  useEffect(() => {
-    if (userDetails) {
-      setName(userDetails.name || '');
-      setDescription(userDetails.bio || userDetails.description || '');
-    }
-  }, [userDetails]);
-
-  const handleUpdateProfile = async () => {
-    if (!name.trim()) {
-      setMessage('Name cannot be empty');
-      return;
-    }
-
-    const token = getToken();
-    if (!token) {
-      setMessage('No authentication token found. Please login again.');
-      return;
-    }
-
-    setLoading(true);
-    setMessage('');
-
-    try {
-      const updateData = {
-        name: name.trim(),
-        bio: description.trim(),
-        description: description.trim()
-      };
-
-      // Update profile - using PUT method for /api/profile endpoint
-      // (You should replace this with the actual endpoint found in Network tab)
-      await axios.put('https://auth.dnjs.lk/api/profile', updateData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+    useEffect(() => {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        if (!token) {
+            setLoggedIn(false);
+            return;
         }
-      });
 
-      setMessage('Profile updated successfully!');
-      
-      // Refresh user details
-      const userResponse = await axios.get('https://auth.dnjs.lk/api/user', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      
-      setUserDetails(userResponse.data);
-      
-    } catch (error) {
-      console.error('Update profile error:', error);
-      if (error.response?.status === 401) {
-        setMessage('Session expired. Please login again.');
-        handleLogout();
-      } else {
-        setMessage(`Update failed: ${error.response?.data?.message || 'Please try again.'}`);
-      }
-    }
-    
-    setLoading(false);
-  };
-
-  const handleLogout = async () => {
-    const token = getToken();
-    
-    if (token) {
-      try {
-        await axios.post('https://auth.dnjs.lk/api/logout', {}, {
-          headers: { 'Authorization': `Bearer ${token}` }
+        axios.get('https://auth.dnjs.lk/api/user', {
+            headers: { Authorization: `Bearer ${token}` }
+        }).then((res) => {
+            setUserData(res.data);
+            setEditName(res.data.name || '');
+            setEditDescription(res.data.profile_description || res.data.bio || res.data.description || '');
+        }).catch((err) => {
+            setError('Failed to fetch user data. Please login again.');
+            setLoggedIn(false);
+            localStorage.removeItem('token');
+            sessionStorage.removeItem('token');
+        }).finally(() => {
+            setLoading(false);
         });
-      } catch (error) {
-        console.error('Logout API error:', error);
-      }
+    }, [setLoggedIn]);
+
+    const handleProfileUpdate = async (e) => {
+        e.preventDefault();
+        
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        if (!token) {
+            setLoggedIn(false);
+            return;
+        }
+
+        setUpdateLoading(true);
+        setUpdateError(null);
+        setUpdateSuccess(false);
+
+        try {
+            const updateData = {
+                name: editName,
+                profile_description: editDescription,
+                bio: editDescription,
+                description: editDescription
+            };
+
+            let response;
+            
+            try {
+                response = await axios.put('https://auth.dnjs.lk/api/user', updateData, {
+                    headers: { 
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+            } catch (putError) {
+                try {
+                    response = await axios.patch('https://auth.dnjs.lk/api/user', updateData, {
+                        headers: { 
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                } catch (patchError) {
+                    response = await axios.post('https://auth.dnjs.lk/api/profile', updateData, {
+                        headers: { 
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                }
+            }
+
+            setUserData(prevData => ({
+                ...prevData,
+                name: editName,
+                profile_description: editDescription
+            }));
+
+            setUpdateSuccess(true);
+            setTimeout(() => setUpdateSuccess(false), 3000);
+
+        } catch (error) {
+            console.error('Profile update failed:', error);
+            setUpdateError('Failed to update profile. Please try again.');
+            if (error.response) {
+                console.error('Error response:', error.response.data);
+                console.error('Error status:', error.response.status);
+            }
+        } finally {
+            setUpdateLoading(false);
+        }
+    };
+
+    const handleLogout = async () => {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+        try {
+            await axios.post('https://auth.dnjs.lk/api/logout', {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+        } catch (error) {}
+
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
+        setLoggedIn(false);
+    };
+
+    const getBio = (data) => {
+        return data.profile_description || data.bio || data.description || data.about || 'No bio available';
+    };
+
+    const getProfileImage = (data) => {
+        return data.profile_pic || data.avatar || data.image || data.photo_url || 'https://via.placeholder.com/150';
+    };
+
+    if (loading) {
+        return <div className="assignment-11"><p>Loading...</p></div>;
     }
-    
-    clearTokens();
-    setUserDetails(null);
-    setIsLoggedIn(false);
-    setMessage('');
-  };
 
-  return (
-    <div className="login-container">
-      <h2 className="login-title">Welcome!</h2>
-      
-      <div className="user-details">
-        <h3>Profile Update:</h3>
-        
-        <div className="form-group">
-          <label className="form-label">Name:</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter your name"
-            className="form-input"
-          />
-        </div>
+    if (error) {
+        return <div className="assignment-11"><p className="error">{error}</p></div>;
+    }
 
-        <div className="form-group">
-          <label className="form-label">Description/Bio:</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter your description or bio"
-            className="form-input"
-            rows="3"
-          />
-        </div>
+    return (
+        <div className="assignment-11">
+            <h2>Assignment 14: User Profile with Edit Functionality</h2>
+            <div className="user-profile">
+                <div className="profile-header">
+                    <img src={getProfileImage(userData)} alt="Profile" className="profile-pic" />
+                    <h3>{userData.name || 'No name provided'}</h3>
+                </div>
+                <div className="profile-details">
+                    <p><strong>Email:</strong> {userData.email || 'Not provided'}</p>
+                    <p><strong>Bio:</strong> {getBio(userData)}</p>
+                </div>
 
-        <button 
-          onClick={handleUpdateProfile}
-          disabled={loading}
-          className={loading ? 'login-button disabled' : 'login-button'}
-          style={{ marginBottom: '20px' }}
-        >
-          {loading ? 'Updating...' : 'Save Profile'}
-        </button>
+                <div className="profile-edit-section">
+                    <h3>Edit Profile</h3>
+                    <form onSubmit={handleProfileUpdate}>
+                        <div>
+                            <label>Name:</label>
+                            <input
+                                type="text"
+                                value={editName}
+                                onChange={(e) => setEditName(e.target.value)}
+                                placeholder="Enter your name"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label>Description:</label>
+                            <textarea
+                                value={editDescription}
+                                onChange={(e) => setEditDescription(e.target.value)}
+                                placeholder="Enter your bio/description"
+                                rows="4"
+                            />
+                        </div>
+                        <button type="submit" disabled={updateLoading}>
+                            {updateLoading ? 'Saving...' : 'Save Changes'}
+                        </button>
+                    </form>
+                    
+                    {updateSuccess && <p className="success">Profile updated successfully!</p>}
+                    {updateError && <p className="error">{updateError}</p>}
+                </div>
 
-        <h3>Current Details:</h3>
-        
-        {userDetails.profile_picture && (
-          <img 
-            src={userDetails.profile_picture} 
-            alt="Profile" 
-            className="profile-picture"
-          />
-        )}
-        
-        {userDetails.name && (
-          <div className="user-name">{userDetails.name}</div>
-        )}
-        
-        {(userDetails.bio || userDetails.description) && (
-          <div className="user-bio">
-            <strong>Bio:</strong> {userDetails.bio || userDetails.description}
-          </div>
-        )}
-        
-        {Object.entries(userDetails).map(([key, value]) => (
-          typeof value === 'string' && 
-          !['name', 'bio', 'description', 'profile_picture'].includes(key) && (
-            <div key={key} className="user-field">
-              <strong>{key}:</strong> {value}
+                <button className="logout-btn" onClick={handleLogout}>Logout</button>
             </div>
-          )
-        ))}
-      </div>
-
-      <button 
-        onClick={handleLogout} 
-        className="logout-button"
-      >
-        Logout
-      </button>
-
-      <div className="instructions">
-        <h3>Network Tab Study Instructions:</h3>
-        <p>1. Open Chrome DevTools (F12) and go to Network tab</p>
-        <p>2. Visit <a href="https://auth.dnjs.lk/" target="_blank" rel="noopener noreferrer">https://auth.dnjs.lk/</a></p>
-        <p>3. Login and update your profile while Network tab is open</p>
-        <p>4. Find the profile update API request in Network tab</p>
-        <p>5. Check the URL, method (PUT/POST), and request payload</p>
-        <p>6. Update the API call in handleUpdateProfile() with correct endpoint</p>
-        
-        <h3>Storage Info:</h3>
-        <p>• localStorage: Persists until manually cleared</p>
-        <p>• sessionStorage: Clears when browser tab is closed</p>
-      </div>
-    </div>
-  );
+        </div>
+    );
 }
 
 function Assignment_14() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userDetails, setUserDetails] = useState(null);
-  const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [initialCheckDone, setInitialCheckDone] = useState(false);
 
-  // Check for existing token on component mount
-  useEffect(() => {
-    const checkExistingToken = async () => {
-      const token = getToken();
-      const storage = localStorage.getItem('access_token') ? 'localStorage' : 'sessionStorage';
-      
-      if (token) {
-        setLoading(true);
-        try {
-          const userResponse = await axios.get('https://auth.dnjs.lk/api/user', {
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
-          
-          setUserDetails(userResponse.data);
-          setIsLoggedIn(true);
-          setMessage(`Logged in from ${storage}`);
-          
-        } catch (error) {
-          clearTokens();
-          setMessage('Session expired. Please login again.');
+    useEffect(() => {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        if (token) {
+            setLoggedIn(true);
         }
-        setLoading(false);
-      }
-    };
-    
-    checkExistingToken();
-  }, []);
+        setInitialCheckDone(true);
+    }, []);
 
-  if (loading) {
-    return (
-      <div className="login-container">
-        <h2 className="login-title">Loading...</h2>
-      </div>
+    if (!initialCheckDone) {
+        return <div className="assignment-11"><p>Loading...</p></div>;
+    }
+
+    return loggedIn ? (
+        <ProfileScreen setLoggedIn={setLoggedIn} />
+    ) : (
+        <LoginScreen setLoggedIn={setLoggedIn} />
     );
-  }
-
-  return (
-    <div>
-      {message && (
-        <div className={message.includes('successful') || message.includes('Logged in') || message.includes('updated') ? 'success-message' : 'error-message'}>
-          <strong>{message.includes('successful') || message.includes('Logged in') || message.includes('updated') ? 'Success:' : 'Error:'}</strong> {message}
-        </div>
-      )}
-      
-      {isLoggedIn ? (
-        <ProfileScreen 
-          userDetails={userDetails}
-          setIsLoggedIn={setIsLoggedIn}
-          setUserDetails={setUserDetails}
-          setMessage={setMessage}
-        />
-      ) : (
-        <LoginScreen 
-          setIsLoggedIn={setIsLoggedIn}
-          setUserDetails={setUserDetails}
-          setMessage={setMessage}
-        />
-      )}
-    </div>
-  );
 }
 
 export default Assignment_14;
