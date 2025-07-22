@@ -16,7 +16,7 @@ function Assignment_9() {
             try {
                 setLoading(true);
                 
-                // Build URL with query parameters
+
                 const url = new URL('https://apis.dnjs.lk/objects/colors.php');
                 if (searchTerm) {
                     url.searchParams.append('search', searchTerm);
@@ -32,12 +32,12 @@ function Assignment_9() {
 
                 const data = await response.json();
                 
-                // Handle the new response format
+  
                 if (data.data) {
                     setColors(data.data);
                     setTotal(data.total || 0);
                 } else {
-                    // Fallback for old response format
+
                     setColors(data);
                     setTotal(data.length);
                 }
@@ -58,7 +58,7 @@ function Assignment_9() {
 
     const handleSearch = () => {
         setSearchTerm(searchInput);
-        setPage(1); // Reset to first page when searching
+        setPage(1);
     };
 
     const handlePageChange = (newPage) => {
@@ -67,13 +67,13 @@ function Assignment_9() {
 
     const handleLimitChange = (e) => {
         setLimit(parseInt(e.target.value));
-        setPage(1); // Reset to first page when changing limit
+        setPage(1); 
     };
 
-    // Calculate total pages
+
     const totalPages = Math.ceil(total / limit);
 
-    // Generate page buttons
+
     const renderPageButtons = () => {
         const buttons = [];
         const maxVisiblePages = 5;
@@ -81,12 +81,12 @@ function Assignment_9() {
         let startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2));
         let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
         
-        // Adjust start page if we're near the end
+
         if (endPage - startPage + 1 < maxVisiblePages) {
             startPage = Math.max(1, endPage - maxVisiblePages + 1);
         }
 
-        // Previous button
+
         if (page > 1) {
             buttons.push(
                 <button
@@ -99,7 +99,7 @@ function Assignment_9() {
             );
         }
 
-        // Page number buttons
+
         for (let i = startPage; i <= endPage; i++) {
             buttons.push(
                 <button
@@ -112,7 +112,7 @@ function Assignment_9() {
             );
         }
 
-        // Next button
+
         if (page < totalPages) {
             buttons.push(
                 <button
@@ -140,7 +140,7 @@ function Assignment_9() {
             <h1>Assignment 9</h1>
             <h2>Fetch Colors from API with Search and Pagination</h2>
 
-            {/* Search and Limit Controls */}
+
             <div className="controls">
                 <input
                     type="text"
@@ -171,17 +171,17 @@ function Assignment_9() {
                 </label>
             </div>
 
-            {/* Loading State */}
+
             {loading && <p>Loading colors...</p>}
 
-            {/* Error State */}
+
             {error && (
                 <div className="error-message">
                     Error: {error}
                 </div>
             )}
 
-            {/* Results */}
+
             {!loading && !error && (
                 <div>
                     <p className="results-info">
@@ -209,21 +209,21 @@ function Assignment_9() {
                         ))}
                     </ul>
 
-                    {/* No Results Message */}
+
                     {colors.length === 0 && searchTerm && (
                         <p className="no-results">
                             No colors found matching "{searchTerm}"
                         </p>
                     )}
 
-                    {/* Pagination Controls */}
+
                     {totalPages > 1 && (
                         <div className="pagination-controls">
                             {renderPageButtons()}
                         </div>
                     )}
                     
-                    {/* Pagination Info */}
+
                     {totalPages > 1 && (
                         <div className="pagination-info">
                             Page {page} of {totalPages} ({total} total items)
