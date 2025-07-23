@@ -19,6 +19,8 @@ import Assignment_15 from './assignments/Assignment_15.jsx'
 import Assignment_16 from './assignments/Assignment_16.jsx'
 import Assignment_17 from './assignments/Assignment_17.jsx'
 import Assignment_18 from './assignments/Assignment_18.jsx'
+import Assignments_19 from './assignments/Assignment_19.jsx'
+import Assignments_20 from './assignments/Assignment_20.jsx'
 
 function HomePage() {
   return (
@@ -79,6 +81,12 @@ function HomePage() {
         <Link to="/assignment-18">
           <button>Assignment 18</button>
         </Link>
+        <Link to="/assignment-19">
+          <button>Assignment 19</button>
+        </Link>
+        <Link to="/assignment-20">
+          <button>Assignment 20</button>
+        </Link>
       </div>
     </div>
   )
@@ -107,6 +115,9 @@ function App() {
         <Route path="/assignment-16" element={<Assignment_16 />} />
         <Route path="/assignment-17" element={<Assignment_17 />} />
         <Route path="/assignment-18" element={<Assignment_18 />} />
+        <Route path="/assignment-19" element={<Assignments_19 />} />
+        <Route path="/assignment-20" element={<Assignments_20 />} />
+
       </Routes>
     </Router>
   )
