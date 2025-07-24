@@ -4,101 +4,153 @@ import "./Assignment_20.css";
 
 const Assignment_20 = () => {
   const [questions, setQuestions] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [current, setCurrent] = useState(0);
   const [score, setScore] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isComplete, setIsComplete] = useState(false);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [showResult, setShowResult] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [done, setDone] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [showAnswer, setShowAnswer] = useState(false);
   const [userAnswers, setUserAnswers] = useState([]);
-  const [showReview, setShowReview] = useState(false);
+  const [reviewing, setReviewing] = useState(false);
   const [reviewIndex, setReviewIndex] = useState(0);
 
   useEffect(() => {
-    loadQuestions();
+    loadQuiz();
   }, []);
 
-  const loadQuestions = async () => {
+  const loadQuiz = async () => {
     try {
-      setIsLoading(true);
-      const response = await axios.get("https://apis.dnjs.lk/objects/quiz.php");
-      setQuestions(response.data);
-      setUserAnswers(new Array(response.data.length).fill(-1)); // Initialize with -1 (no answer)
-      setIsLoading(false);
+      const res = await axios.get("https://apis.dnjs.lk/objects/quiz.php");
+      setQuestions(res.data);
+      setUserAnswers(new Array(res.data.length).fill(-1));
+      setLoading(false);
     } catch (error) {
-      console.error("Failed to load questions:", error);
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const handleAnswer = (answerIndex) => {
-    if (showResult) return;
-
-    const currentQuestion = questions[currentIndex];
-    setSelectedAnswer(answerIndex);
-    setShowResult(true);
-
-    // Store user's answer
-    const newUserAnswers = [...userAnswers];
-    newUserAnswers[currentIndex] = answerIndex;
-    setUserAnswers(newUserAnswers);
-
-    if (answerIndex === currentQuestion.correct) {
+  const handleClick = (index) => {
+    if (showAnswer) return;
+    
+    setSelected(index);
+    setShowAnswer(true);
+    
+    const newAnswers = [...userAnswers];
+    newAnswers[current] = index;
+    setUserAnswers(newAnswers);
+    
+    if (index === questions[current].correct) {
       setScore(score + 1);
     }
 
     setTimeout(() => {
-      if (currentIndex < questions.length - 1) {
-        setCurrentIndex(currentIndex + 1);
-        setSelectedAnswer(null);
-        setShowResult(false);
+      if (current < questions.length - 1) {
+        setCurrent(current + 1);
+        setSelected(null);
+        setShowAnswer(false);
       } else {
-        setIsComplete(true);
+        setDone(true);
       }
-    }, 1500);
+    }, 1000);
   };
 
   const restart = () => {
-    setCurrentIndex(0);
+    setCurrent(0);
     setScore(0);
-    setIsComplete(false);
-    setSelectedAnswer(null);
-    setShowResult(false);
-    setShowReview(false);
+    setDone(false);
+    setSelected(null);
+    setShowAnswer(false);
+    setReviewing(false);
     setReviewIndex(0);
-    loadQuestions();
+    loadQuiz();
   };
 
   const startReview = () => {
-    setShowReview(true);
+    setReviewing(true);
     setReviewIndex(0);
   };
 
-  const nextReviewQuestion = () => {
+  const nextReview = () => {
     if (reviewIndex < questions.length - 1) {
       setReviewIndex(reviewIndex + 1);
     }
   };
 
-  const lastReviewQuestion = () => {
+  const lastReview = () => {
     if (reviewIndex > 0) {
       setReviewIndex(reviewIndex - 1);
     }
   };
 
   const backToScore = () => {
-    setShowReview(false);
+    setReviewing(false);
   };
 
-  if (isLoading) {
+  if (loading) {
+    return <div className="container"><div className="loading">Loading...</div></div>;
+  }
+
+  if (done && reviewing) {
+    const question = questions[reviewIndex];
+    const userAnswer = userAnswers[reviewIndex];
+
     return (
       <div className="container">
-        <div className="loading">Loading quiz...</div>
+        <div className="quiz">
+          <div className="header">
+            <h1>Assignment #20 - Review</h1>
+            <p>Question {reviewIndex + 1} of {questions.length}</p>
+          </div>
+
+          <div className="question-card">
+            <div className="review-answers">
+              {question.answers.map((answer, i) => {
+                let className = "review-option";
+                if (i === question.correct) {
+                  className += " correct-answer";
+                } else if (i === userAnswer && i !== question.correct) {
+                  className += " wrong-answer";
+                } else {
+                  className += " other-answer";
+                }
+
+                return (
+                  <div key={i} className={className}>
+                    {answer}
+                  </div>
+                );
+              })}
+            </div>
+
+            <h2>{question.question}</h2>
+
+            <div className="review-navigation">
+              <button 
+                onClick={lastReview} 
+                disabled={reviewIndex === 0}
+                className="nav-btn"
+              >
+                Last
+              </button>
+              <button 
+                onClick={nextReview} 
+                disabled={reviewIndex === questions.length - 1}
+                className="nav-btn"
+              >
+                Next
+              </button>
+            </div>
+
+            <button onClick={backToScore} className="back-btn">
+              Back to Score
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
-  if (isComplete && !showReview) {
+  if (done) {
     return (
       <div className="container">
         <div className="complete">
@@ -108,10 +160,10 @@ const Assignment_20 = () => {
           </p>
           <p>{Math.round((score / questions.length) * 100)}%</p>
           <div className="complete-buttons">
-            <button className="restart-btn" onClick={restart}>
+            <button onClick={restart} className="restart-btn">
               Try Again
             </button>
-            <button className="review-btn" onClick={startReview}>
+            <button onClick={startReview} className="review-btn">
               Review Answers
             </button>
           </div>
@@ -120,146 +172,45 @@ const Assignment_20 = () => {
     );
   }
 
-  // Review Section
-  if (showReview) {
-    const reviewQuestion = questions[reviewIndex];
-    const userAnswer = userAnswers[reviewIndex];
-
-    return (
-      <div className="container">
-        <div className="quiz">
-          <div className="header">
-            <h1>Assignment #20 - Review</h1>
-            <p>
-              Question {reviewIndex + 1} of {questions.length}
-            </p>
-          </div>
-
-          <div className="question-card">
-            <div className="review-answers">
-              {reviewQuestion.answers.map((answer, index) => {
-                let answerClass = "review-answer";
-                
-                if (index === reviewQuestion.correct) {
-                  answerClass += " correct-answer";
-                } else if (index === userAnswer && index !== reviewQuestion.correct) {
-                  answerClass += " wrong-answer";
-                } else {
-                  answerClass += " other-answer";
-                }
-
-                return (
-                  <div key={index} className={answerClass}>
-                    {answer}
-                  </div>
-                );
-              })}
-            </div>
-
-            <h2 className="question">{reviewQuestion.question}</h2>
-
-            <div className="review-navigation">
-              <button 
-                className="nav-btn" 
-                onClick={lastReviewQuestion}
-                disabled={reviewIndex === 0}
-              >
-                Last
-              </button>
-              <button 
-                className="nav-btn" 
-                onClick={nextReviewQuestion}
-                disabled={reviewIndex === questions.length - 1}
-              >
-                Next
-              </button>
-            </div>
-
-            <div className="review-info">
-              <p>
-                <strong>Your answer:</strong> {userAnswer >= 0 ? reviewQuestion.answers[userAnswer] : "No answer"}
-              </p>
-              <p>
-                <strong>Correct answer:</strong> {reviewQuestion.answers[reviewQuestion.correct]}
-              </p>
-              <p className={userAnswer === reviewQuestion.correct ? "correct-text" : "incorrect-text"}>
-                {userAnswer === reviewQuestion.correct ? "✅ Correct" : "❌ Incorrect"}
-              </p>
-            </div>
-
-            <button className="back-btn" onClick={backToScore}>
-              Back to Score
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+  if (!questions.length) {
+    return <div className="container"><div className="error">No questions</div></div>;
   }
 
-  if (questions.length === 0) {
-    return (
-      <div className="container">
-        <div className="error">No questions available</div>
-      </div>
-    );
-  }
-
-  const currentQuestion = questions[currentIndex];
+  const question = questions[current];
 
   return (
     <div className="container">
       <div className="quiz">
         <div className="header">
           <h1>Assignment #20</h1>
-          <p>
-            Question {currentIndex + 1} of {questions.length} | Score: {score}
-          </p>
+          <p>Question {current + 1} of {questions.length} | Score: {score}</p>
         </div>
 
         <div className="progress">
-          <div
-            className="progress-bar"
-            style={{
-              width: `${((currentIndex + 1) / questions.length) * 100}%`,
-            }}
-          ></div>
+          <div className="progress-bar" style={{width: `${((current + 1) / questions.length) * 100}%`}}></div>
         </div>
 
         <div className="question-card">
-          <h2 className="question">{currentQuestion.question}</h2>
-
+          <h2 className="question">{question.question}</h2>
+          
           <div className="answers">
-            {currentQuestion.answers.map((answer, index) => {
-              let buttonClass = "answer-btn";
-
-              if (showResult) {
-                if (index === currentQuestion.correct) {
-                  buttonClass += " correct";
-                } else if (index === selectedAnswer) {
-                  buttonClass += " incorrect";
-                } else {
-                  buttonClass += " disabled";
-                }
-              }
-
-              return (
-                <button
-                  key={index}
-                  className={buttonClass}
-                  onClick={() => handleAnswer(index)}
-                  disabled={showResult}
-                >
-                  {answer}
-                </button>
-              );
-            })}
+            {question.answers.map((answer, i) => (
+              <button
+                key={i}
+                className={`answer-btn ${showAnswer ? 
+                  (i === question.correct ? 'correct' : 
+                   i === selected ? 'incorrect' : 'disabled') : ''}`}
+                onClick={() => handleClick(i)}
+                disabled={showAnswer}
+              >
+                {answer}
+              </button>
+            ))}
           </div>
 
-          {showResult && (
+          {showAnswer && (
             <div className="feedback">
-              {selectedAnswer === currentQuestion.correct
-                ? "✅ Correct!"
-                : "❌ Wrong answer"}
+              {selected === question.correct ? "✅ Correct!" : "❌ Wrong answer"}
             </div>
           )}
         </div>

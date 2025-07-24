@@ -21,11 +21,13 @@ import Assignment_17 from './assignments/Assignment_17.jsx'
 import Assignment_18 from './assignments/Assignment_18.jsx'
 import Assignments_19 from './assignments/Assignment_19.jsx'
 import Assignments_20 from './assignments/Assignment_20.jsx'
+import Assignments_21 from './assignments/Assignment_21.jsx'
+import Assignments_22 from './assignments/Assignment_22.jsx'
 
 function HomePage() {
   return (
     <div className="App">
-      <h1>Arimac Assignments - Kaviru</h1>
+      <h1>IMI Games Assignments - Kaviru</h1>
       <div className="button-container">
         <Link to="/assignment-1">
           <button>Assignment 1</button>
@@ -87,6 +89,12 @@ function HomePage() {
         <Link to="/assignment-20">
           <button>Assignment 20</button>
         </Link>
+        <Link to="/assignment-21">
+          <button>Assignment 21</button>
+        </Link>
+        <Link to="/assignment-22">
+          <button>Assignment 22</button>
+        </Link> 
       </div>
     </div>
   )
@@ -117,6 +125,8 @@ function App() {
         <Route path="/assignment-18" element={<Assignment_18 />} />
         <Route path="/assignment-19" element={<Assignments_19 />} />
         <Route path="/assignment-20" element={<Assignments_20 />} />
+        <Route path="/assignment-21" element={<Assignments_21 />} />
+        <Route path="/assignment-22" element={<Assignments_22 />} />
 
       </Routes>
     </Router>
