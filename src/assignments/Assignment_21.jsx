@@ -46,8 +46,9 @@ function Assignment_21() {
         const ctx = canvas.getContext('2d');
         const rect = canvas.getBoundingClientRect();
         
-        const x = Math.floor(event.clientX - rect.left);
-        const y = Math.floor(event.clientY - rect.top);
+        // Alternative method 1: Using offsetX and offsetY
+        const x = Math.floor(event.offsetX);
+        const y = Math.floor(event.offsetY);
         
         const imageData = ctx.getImageData(x, y, 1, 1);
         const pixel = imageData.data;

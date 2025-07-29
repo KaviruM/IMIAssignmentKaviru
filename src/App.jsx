@@ -24,6 +24,7 @@ import Assignments_20 from './assignments/Assignment_20.jsx'
 import Assignments_21 from './assignments/Assignment_21.jsx'
 import Assignments_22 from './assignments/Assignment_22.jsx'
 import CursorEffect from './assignments/CursorEffect.jsx'
+import DragDrop from './assignments/DragDrop.jsx'
 
 function HomePage() {
   return (
@@ -99,6 +100,9 @@ function HomePage() {
         <Link to="/cursor-effect">
           <button>Cursor Effect</button>
         </Link>
+        <Link to="/drag-drop">
+          <button>Drag and Drop</button>
+        </Link>
       </div>
     </div>
   )
@@ -132,6 +136,7 @@ function App() {
         <Route path="/assignment-21" element={<Assignments_21 />} />
         <Route path="/assignment-22" element={<Assignments_22 />} />
         <Route path="/cursor-effect" element={<CursorEffect />} />
+        <Route path="/drag-drop" element={<DragDrop />} />
 
       </Routes>
     </Router>

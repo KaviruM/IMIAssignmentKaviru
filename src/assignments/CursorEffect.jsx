@@ -22,7 +22,7 @@ function CursorEffect() {
 
       setTimeout(() => {
         trail.remove();
-      }, 300);
+      }, 700);
     };
 
     document.addEventListener('mousemove', handleMouseMove);
