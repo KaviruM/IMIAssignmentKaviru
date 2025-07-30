@@ -25,6 +25,7 @@ import Assignments_21 from './assignments/Assignment_21.jsx'
 import Assignments_22 from './assignments/Assignment_22.jsx'
 import CursorEffect from './assignments/CursorEffect.jsx'
 import DragDrop from './assignments/DragDrop.jsx'
+import ContextMenu from './assignments/ContextMenu.jsx'
 
 function HomePage() {
   return (
@@ -103,6 +104,9 @@ function HomePage() {
         <Link to="/drag-drop">
           <button>Drag and Drop</button>
         </Link>
+        <Link to="/context-menu">
+          <button>Context Menu</button>
+        </Link>
       </div>
     </div>
   )
@@ -137,6 +141,7 @@ function App() {
         <Route path="/assignment-22" element={<Assignments_22 />} />
         <Route path="/cursor-effect" element={<CursorEffect />} />
         <Route path="/drag-drop" element={<DragDrop />} />
+        <Route path="/context-menu" element={<ContextMenu />} />
 
       </Routes>
     </Router>
