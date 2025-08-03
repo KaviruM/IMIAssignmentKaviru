@@ -58,7 +58,7 @@ const ScrollableVideo = () => {
   };
 
 
-  
+
   return (
     <>
       <div className="video-container">
@@ -72,10 +72,6 @@ const ScrollableVideo = () => {
         <TextSection index={3} title="Action Button" subtitle="Do more with less." />
         <TextSection index={4} title="All Day Battery" subtitle="Power that keeps up." />
         <TextSection index={5} title="iOS 18" subtitle="The best iOS yet." />
-      </div>
-
-      <div className="progress-indicator">
-        {Math.round(scrollProgress * 100)}%
       </div>
     </>
   );
