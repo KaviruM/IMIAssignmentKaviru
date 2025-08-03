@@ -26,6 +26,8 @@ import Assignments_22 from './assignments/Assignment_22.jsx'
 import CursorEffect from './assignments/CursorEffect.jsx'
 import DragDrop from './assignments/DragDrop.jsx'
 import ContextMenu from './assignments/ContextMenu.jsx'
+import ScrollableVideo from './assignments/ScrollableVideo.jsx'
+import PixelationFilter from './assignments/PixelationFilter.jsx'
 
 function HomePage() {
   return (
@@ -107,6 +109,12 @@ function HomePage() {
         <Link to="/context-menu">
           <button>Context Menu</button>
         </Link>
+        <Link to="/scrollable-video">
+          <button>Scrollable Video</button>
+        </Link>
+        <Link to="/pixelation-filter">
+          <button>Pixelation Filter</button>
+        </Link>
       </div>
     </div>
   )
@@ -142,7 +150,8 @@ function App() {
         <Route path="/cursor-effect" element={<CursorEffect />} />
         <Route path="/drag-drop" element={<DragDrop />} />
         <Route path="/context-menu" element={<ContextMenu />} />
-
+        <Route path="/scrollable-video" element={<ScrollableVideo />} />
+        <Route path="/pixelation-filter" element={<PixelationFilter />} />
       </Routes>
     </Router>
   )
