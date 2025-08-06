@@ -28,6 +28,8 @@ import DragDrop from './assignments/DragDrop.jsx'
 import ContextMenu from './assignments/ContextMenu.jsx'
 import ScrollableVideo from './assignments/ScrollableVideo.jsx'
 import PixelationFilter from './assignments/PixelationFilter.jsx'
+import BladeHit from './assignments/BladeHit.jsx'
+import CropIMG from './assignments/CropIMG.jsx'
 
 function HomePage() {
   return (
@@ -115,6 +117,12 @@ function HomePage() {
         <Link to="/pixelation-filter">
           <button>Pixelation Filter</button>
         </Link>
+        <Link to="/blade-hit">
+          <button>Blade Hit</button>
+        </Link>
+        <Link to="/crop-img">
+          <button>Crop Image</button>
+        </Link>
       </div>
     </div>
   )
@@ -152,6 +160,8 @@ function App() {
         <Route path="/context-menu" element={<ContextMenu />} />
         <Route path="/scrollable-video" element={<ScrollableVideo />} />
         <Route path="/pixelation-filter" element={<PixelationFilter />} />
+        <Route path="/blade-hit" element={<BladeHit />} />
+        <Route path="/crop-img" element={<CropIMG />} />
       </Routes>
     </Router>
   )
