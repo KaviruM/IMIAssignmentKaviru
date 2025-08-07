@@ -30,6 +30,7 @@ import ScrollableVideo from './assignments/ScrollableVideo.jsx'
 import PixelationFilter from './assignments/PixelationFilter.jsx'
 import BladeHit from './assignments/BladeHit.jsx'
 import CropIMG from './assignments/CropIMG.jsx'
+import SprintCursor from './assignments/SprintCursor.jsx'
 
 function HomePage() {
   return (
@@ -123,6 +124,9 @@ function HomePage() {
         <Link to="/crop-img">
           <button>Crop Image</button>
         </Link>
+        <Link to="/sprint-cursor">
+          <button>Sprint Cursor</button>
+        </Link>
       </div>
     </div>
   )
@@ -162,6 +166,7 @@ function App() {
         <Route path="/pixelation-filter" element={<PixelationFilter />} />
         <Route path="/blade-hit" element={<BladeHit />} />
         <Route path="/crop-img" element={<CropIMG />} />
+        <Route path="/sprint-cursor" element={<SprintCursor />} />
       </Routes>
     </Router>
   )

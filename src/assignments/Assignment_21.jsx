@@ -1,6 +1,5 @@
 import React from 'react'
 import { useRef, useState } from 'react'
-import './Assignment_21.css'
 
 function Assignment_21() {
     const canvasRef = useRef(null);
@@ -46,9 +45,22 @@ function Assignment_21() {
         const ctx = canvas.getContext('2d');
         const rect = canvas.getBoundingClientRect();
         
-        // Alternative method 1: Using offsetX and offsetY
-        const x = Math.floor(event.offsetX);
-        const y = Math.floor(event.offsetY);
+        // Calculate the scale factors
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        
+        // Get click coordinates relative to the canvas element
+        const clientX = event.clientX - rect.left;
+        const clientY = event.clientY - rect.top;
+        
+        // Convert to canvas coordinates
+        const x = Math.floor(clientX * scaleX);
+        const y = Math.floor(clientY * scaleY);
+        
+        // Make sure coordinates are within bounds
+        if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) {
+            return;
+        }
         
         const imageData = ctx.getImageData(x, y, 1, 1);
         const pixel = imageData.data;
@@ -78,29 +90,68 @@ function Assignment_21() {
         setImage(false);
         setShowColor(false);
         setSelectedColor({r: 0, g: 0, b: 0});
+        
+        // Reset file input
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
     };
 
     const rgbString = `rgb(${selectedColor.r}, ${selectedColor.g}, ${selectedColor.b})`;
     const hexString = rgbToHex(selectedColor.r, selectedColor.g, selectedColor.b);
 
     return (
-        <div className="assignment-container">
-            <h1>Assignment 21 - Color Picker</h1>
+        <div className="assignment-container" style={{
+            fontFamily: 'Arial, sans-serif',
+            backgroundColor: '#2d2d2d',
+            color: 'white',
+            margin: 0,
+            padding: '20px',
+            textAlign: 'center',
+            maxWidth: '800px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            minHeight: '100vh'
+        }}>
+            <h1 style={{
+                fontSize: '24px',
+                marginBottom: '30px',
+                fontWeight: 'normal'
+            }}>Assignment 21 - Color Picker</h1>
             
-            <div className="controls">
-                <button onClick={handleUpload}>Upload Image</button>
-                <button onClick={handleReset}>Reset</button>
+            <div className="controls" style={{ marginBottom: '30px' }}>
+                <button onClick={handleUpload} style={{
+                    backgroundColor: '#4a4a4a',
+                    color: 'white',
+                    border: '1px solid #666',
+                    padding: '8px 16px',
+                    margin: '0 10px',
+                    cursor: 'pointer',
+                    fontSize: '14px'
+                }}>Upload Image</button>
+                <button onClick={handleReset} style={{
+                    backgroundColor: '#4a4a4a',
+                    color: 'white',
+                    border: '1px solid #666',
+                    padding: '8px 16px',
+                    margin: '0 10px',
+                    cursor: 'pointer',
+                    fontSize: '14px'
+                }}>Reset</button>
             </div>
             
             <input
                 type="file"
                 accept="image/*"
                 ref={fileInputRef}
-                className="file-input"
+                style={{ display: 'none' }}
                 onChange={handleFileChange}
             />
             
-            <div className="instruction-text">
+            <div className="instruction-text" style={{
+                margin: '20px 0',
+                fontSize: '16px'
+            }}>
                 {image ? (
                     <p>Click on the image to pick colors</p>
                 ) : (
@@ -108,31 +159,60 @@ function Assignment_21() {
                 )}
             </div>
             
-            <div className="canvas-container">
+            <div className="canvas-container" style={{ margin: '20px 0' }}>
                 <canvas 
                     ref={canvasRef} 
                     onClick={handleCanvasClick}
                     style={{ 
                         cursor: image ? 'crosshair' : 'default',
-                        display: image ? 'block' : 'none'
+                        display: image ? 'block' : 'none',
+                        border: '2px solid #666',
+                        maxWidth: '100%'
                     }}
                 />
             </div>
             
             {showColor && (
-                <div className="color-display">
-                    <div className="color-info">
+                <div className="color-display" style={{
+                    marginTop: '30px',
+                    padding: '20px',
+                    backgroundColor: '#3a3a3a',
+                    borderRadius: '5px',
+                    display: 'inline-block'
+                }}>
+                    <div className="color-info" style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '30px',
+                        justifyContent: 'center',
+                        flexWrap: 'wrap'
+                    }}>
                         <div className="color-preview">
-                            <p>Color Preview</p>
+                            <p style={{
+                                margin: '0 0 10px 0',
+                                fontWeight: 'bold'
+                            }}>Color Preview</p>
                             <div 
                                 className="color-swatch"
-                                style={{ backgroundColor: rgbString }}
+                                style={{ 
+                                    backgroundColor: rgbString,
+                                    width: '60px',
+                                    height: '60px',
+                                    border: '2px solid #666',
+                                    display: 'inline-block'
+                                }}
                             ></div>
                         </div>
                         
-                        <div className="color-values">
-                            <p><strong>RGB:</strong> {rgbString}</p>
-                            <p><strong>HEX:</strong> {hexString}</p>
+                        <div className="color-values" style={{ textAlign: 'left' }}>
+                            <p style={{
+                                margin: '5px 0',
+                                fontSize: '14px'
+                            }}><strong>RGB:</strong> {rgbString}</p>
+                            <p style={{
+                                margin: '5px 0',
+                                fontSize: '14px'
+                            }}><strong>HEX:</strong> {hexString}</p>
                         </div>
                     </div>
                 </div>
