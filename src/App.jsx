@@ -31,6 +31,7 @@ import PixelationFilter from './assignments/PixelationFilter.jsx'
 import BladeHit from './assignments/BladeHit.jsx'
 import CropIMG from './assignments/CropIMG.jsx'
 import SprintCursor from './assignments/SprintCursor.jsx'
+import WallBall from './assignments/WallBall.jsx'
 
 function HomePage() {
   return (
@@ -127,6 +128,9 @@ function HomePage() {
         <Link to="/sprint-cursor">
           <button>Sprint Cursor</button>
         </Link>
+        <Link to="/wall-ball">
+          <button>Wall Ball</button>
+        </Link>
       </div>
     </div>
   )
@@ -167,6 +171,7 @@ function App() {
         <Route path="/blade-hit" element={<BladeHit />} />
         <Route path="/crop-img" element={<CropIMG />} />
         <Route path="/sprint-cursor" element={<SprintCursor />} />
+        <Route path="/wall-ball" element={<WallBall />} />
       </Routes>
     </Router>
   )
