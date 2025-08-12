@@ -1,37 +1,38 @@
-import { useState } from 'react'
-import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import './App.css'
-import Assignment_1 from './assignments/Assignment_1.jsx'
-import Assignment_2 from './assignments/Assignment_2.jsx'
-import Assignment_3 from './assignments/Assignment_3.jsx'
-import Assignment_4 from './assignments/Assignment_4.jsx'
-import Assignment_5 from './assignments/Assignment_5.jsx'
-import Assignment_6 from './assignments/Assignment_6.jsx'
-import Assignment_7 from './assignments/Assignment_7.jsx'
-import Assignment_8 from './assignments/Assignment_8.jsx'
-import Assignment_9 from './assignments/Assignment_9.jsx'
-import Assignment_10 from './assignments/Assignment_10.jsx'
-import Assignment_11 from './assignments/Assignment_11.jsx'
-import Assignment_12 from './assignments/Assignment_12.jsx'
-import Assignment_13 from './assignments/Assignment_13.jsx'
-import Assignment_14 from './assignments/Assignment_14.jsx'
-import Assignment_15 from './assignments/Assignment_15.jsx'
-import Assignment_16 from './assignments/Assignment_16.jsx'
-import Assignment_17 from './assignments/Assignment_17.jsx'
-import Assignment_18 from './assignments/Assignment_18.jsx'
-import Assignments_19 from './assignments/Assignment_19.jsx'
-import Assignments_20 from './assignments/Assignment_20.jsx'
-import Assignments_21 from './assignments/Assignment_21.jsx'
-import Assignments_22 from './assignments/Assignment_22.jsx'
-import CursorEffect from './assignments/CursorEffect.jsx'
-import DragDrop from './assignments/DragDrop.jsx'
-import ContextMenu from './assignments/ContextMenu.jsx'
-import ScrollableVideo from './assignments/ScrollableVideo.jsx'
-import PixelationFilter from './assignments/PixelationFilter.jsx'
-import BladeHit from './assignments/BladeHit.jsx'
-import CropIMG from './assignments/CropIMG.jsx'
-import SprintCursor from './assignments/SprintCursor.jsx'
-import WallBall from './assignments/WallBall.jsx'
+import { useState } from "react";
+import { HashRouter as Router, Routes, Route, Link } from "react-router-dom";
+import "./App.css";
+import Assignment_1 from "./assignments/Assignment_1.jsx";
+import Assignment_2 from "./assignments/Assignment_2.jsx";
+import Assignment_3 from "./assignments/Assignment_3.jsx";
+import Assignment_4 from "./assignments/Assignment_4.jsx";
+import Assignment_5 from "./assignments/Assignment_5.jsx";
+import Assignment_6 from "./assignments/Assignment_6.jsx";
+import Assignment_7 from "./assignments/Assignment_7.jsx";
+import Assignment_8 from "./assignments/Assignment_8.jsx";
+import Assignment_9 from "./assignments/Assignment_9.jsx";
+import Assignment_10 from "./assignments/Assignment_10.jsx";
+import Assignment_11 from "./assignments/Assignment_11.jsx";
+import Assignment_12 from "./assignments/Assignment_12.jsx";
+import Assignment_13 from "./assignments/Assignment_13.jsx";
+import Assignment_14 from "./assignments/Assignment_14.jsx";
+import Assignment_15 from "./assignments/Assignment_15.jsx";
+import Assignment_16 from "./assignments/Assignment_16.jsx";
+import Assignment_17 from "./assignments/Assignment_17.jsx";
+import Assignment_18 from "./assignments/Assignment_18.jsx";
+import Assignments_19 from "./assignments/Assignment_19.jsx";
+import Assignments_20 from "./assignments/Assignment_20.jsx";
+import Assignments_21 from "./assignments/Assignment_21.jsx";
+import Assignments_22 from "./assignments/Assignment_22.jsx";
+import CursorEffect from "./assignments/CursorEffect.jsx";
+import DragDrop from "./assignments/DragDrop.jsx";
+import ContextMenu from "./assignments/ContextMenu.jsx";
+import ScrollableVideo from "./assignments/ScrollableVideo.jsx";
+import PixelationFilter from "./assignments/PixelationFilter.jsx";
+import BladeHit from "./assignments/BladeHit.jsx";
+import CropIMG from "./assignments/CropIMG.jsx";
+import SprintCursor from "./assignments/SprintCursor.jsx";
+import WallBall from "./assignments/WallBall.jsx";
+import SnakeGame from "./assignments/SnakeGame.jsx";
 
 function HomePage() {
   return (
@@ -131,9 +132,12 @@ function HomePage() {
         <Link to="/wall-ball">
           <button>Wall Ball</button>
         </Link>
+        <Link to="/snake-game">
+          <button>Snake Game</button>
+        </Link>
       </div>
     </div>
-  )
+  );
 }
 
 function App() {
@@ -172,9 +176,10 @@ function App() {
         <Route path="/crop-img" element={<CropIMG />} />
         <Route path="/sprint-cursor" element={<SprintCursor />} />
         <Route path="/wall-ball" element={<WallBall />} />
+        <Route path="/snake-game" element={<SnakeGame />} />
       </Routes>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
