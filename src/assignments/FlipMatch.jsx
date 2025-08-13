@@ -18,7 +18,8 @@ export default function FlipMatch() {
   }, []);
 
   const initializeGame = (items) => {
-    const shuffledCards = [...items, ...items].sort(() => Math.random() - 0.5);
+    const duplicatedItems = [...items, ...items];
+    const shuffledCards = duplicatedItems.sort(() => Math.random() - 0.5);
     setCards(shuffledCards);
     setFlippedCards([]);
     setMatchedCards([]);
@@ -39,12 +40,12 @@ export default function FlipMatch() {
         setMatchedCards(prev => [...prev, firstCard, secondCard]);
         setFlippedCards([]);
       } else {
-        setTimeout(() => setFlippedCards([]), 800);
+        setTimeout(() => setFlippedCards([]), 500);
       }
     }
   };
 
-  const isCardVisible = (index) => {
+  const isCardFlipped = (index) => {
     return flippedCards.includes(index) || matchedCards.includes(index);
   };
 
@@ -67,12 +68,14 @@ export default function FlipMatch() {
 
       <div className="grid">
         {cards.map((symbol, index) => (
-          <div
-            key={index}
-            className={`card ${isCardVisible(index) ? "flipped" : ""} ${isCardMatched(index) ? "matched" : ""}`}
-            onClick={() => handleCardClick(index)}
-          >
-            {isCardVisible(index) ? symbol : ""}
+          <div key={index} className="card-container">
+            <div
+              className={`card ${isCardFlipped(index) ? "flipped" : ""} ${isCardMatched(index) ? "matched" : ""}`}
+              onClick={() => handleCardClick(index)}
+            >
+              <div className="card-front">❓</div>
+              <div className="card-back">{symbol}</div>
+            </div>
           </div>
         ))}
       </div>
