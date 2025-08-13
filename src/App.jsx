@@ -33,6 +33,7 @@ import CropIMG from "./assignments/CropIMG.jsx";
 import SprintCursor from "./assignments/SprintCursor.jsx";
 import WallBall from "./assignments/WallBall.jsx";
 import SnakeGame from "./assignments/SnakeGame.jsx";
+import FlipMatch from "./assignments/FlipMatch.jsx";
 
 function HomePage() {
   return (
@@ -135,6 +136,9 @@ function HomePage() {
         <Link to="/snake-game">
           <button>Snake Game</button>
         </Link>
+        <Link to="/flip-match">
+          <button>Flip Match</button>
+        </Link>
       </div>
     </div>
   );
@@ -177,6 +181,7 @@ function App() {
         <Route path="/sprint-cursor" element={<SprintCursor />} />
         <Route path="/wall-ball" element={<WallBall />} />
         <Route path="/snake-game" element={<SnakeGame />} />
+        <Route path="/flip-match" element={<FlipMatch />} />
       </Routes>
     </Router>
   );

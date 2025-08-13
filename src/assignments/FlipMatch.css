@@ -1,0 +1,58 @@
+.game-board {
+  width: 400px;
+  height: 450px;
+  background-color: darkblue;
+  margin: 100px auto;
+  padding: 15px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
+.buttons button {
+  padding: 6px 12px;
+  border: none;
+  background: #555;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.buttons button:hover {
+  background: #777;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 80px);
+  gap: 10px;
+  justify-content: center;
+}
+
+.card {
+  width: 80px;
+  height: 80px;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.card.flipped {
+  background: #ddd;
+}
+
+.card.matched {
+  background: lightgreen;
+}
