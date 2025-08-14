@@ -34,6 +34,7 @@ import SprintCursor from "./assignments/SprintCursor.jsx";
 import WallBall from "./assignments/WallBall.jsx";
 import SnakeGame from "./assignments/SnakeGame.jsx";
 import FlipMatch from "./assignments/FlipMatch.jsx";
+import StepScrollAnimation from "./assignments/StepScrollAnimation.jsx";
 
 function HomePage() {
   return (
@@ -139,6 +140,9 @@ function HomePage() {
         <Link to="/flip-match">
           <button>Flip Match</button>
         </Link>
+        <Link to="step-scroll-animation">
+        <button>Step Scroll Animation</button>
+        </Link>
       </div>
     </div>
   );
@@ -182,6 +186,7 @@ function App() {
         <Route path="/wall-ball" element={<WallBall />} />
         <Route path="/snake-game" element={<SnakeGame />} />
         <Route path="/flip-match" element={<FlipMatch />} />
+        <Route path="/step-scroll-animation" element={<StepScrollAnimation />} />
       </Routes>
     </Router>
   );

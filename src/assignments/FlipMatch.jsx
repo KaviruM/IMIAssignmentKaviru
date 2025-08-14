@@ -26,7 +26,11 @@ export default function FlipMatch() {
   };
 
   const handleCardClick = (index) => {
-    if (flippedCards.length === 2 || flippedCards.includes(index) || matchedCards.includes(index)) {
+    if (
+      flippedCards.length === 2 ||
+      flippedCards.includes(index) ||
+      matchedCards.includes(index)
+    ) {
       return;
     }
 
@@ -35,9 +39,9 @@ export default function FlipMatch() {
 
     if (newFlippedCards.length === 2) {
       const [firstCard, secondCard] = newFlippedCards;
-      
+
       if (cards[firstCard] === cards[secondCard]) {
-        setMatchedCards(prev => [...prev, firstCard, secondCard]);
+        setMatchedCards((prev) => [...prev, firstCard, secondCard]);
         setFlippedCards([]);
       } else {
         setTimeout(() => setFlippedCards([]), 500);
@@ -70,7 +74,9 @@ export default function FlipMatch() {
         {cards.map((symbol, index) => (
           <div key={index} className="card-container">
             <div
-              className={`card ${isCardFlipped(index) ? "flipped" : ""} ${isCardMatched(index) ? "matched" : ""}`}
+              className={`card ${isCardFlipped(index) ? "flipped" : ""} ${
+                isCardMatched(index) ? "matched" : ""
+              }`}
               onClick={() => handleCardClick(index)}
             >
               <div className="card-front">❓</div>
