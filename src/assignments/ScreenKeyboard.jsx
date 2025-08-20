@@ -1,116 +1,78 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import "./ScreenKeyboard.css";
 
 const ScreenKeyboard = () => {
   const [text, setText] = useState("");
-  const [pressedKeys, setPressedKeys] = useState(new Set());
-  const textareaRef = useRef(null);
+  const [pressedKeys, setPressedKeys] = useState([]);
 
   const keys = [
-    [
-      "~",
-      "!",
-      "@",
-      "#",
-      "$",
-      "%",
-      "^",
-      "&",
-      "*",
-      "(",
-      ")",
-      "_",
-      "+",
-      "Backspace",
-    ],
-    ["Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}", "|"],
-    [
-      "CapsLock",
-      "A",
-      "S",
-      "D",
-      "F",
-      "G",
-      "H",
-      "J",
-      "K",
-      "L",
-      ":",
-      '"',
-      "Enter",
-    ],
-    ["Shift", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?", "Shift"],
-    ["Ctrl", "Alt", "Space", "Alt", "Ctrl"],
+    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "Backspace"],
+    ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+    ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
+    ["Z", "X", "C", "V", "B", "N", "M"],
+    ["Space"],
   ];
 
   useEffect(() => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
+    const onKeyDown = (event) => {
+      let keyName = event.key;
 
-    const handleKeyDown = (e) => {
-      let key = e.key;
-      if (key === " ") key = "Space";
-      if (key === "Control") key = "Ctrl";
-      setPressedKeys((prev) => new Set([...prev, key.toUpperCase()]));
+      if (keyName === " ") keyName = "Space";
+      if (keyName === "Backspace") keyName = "Backspace";
+      if (keyName === "Enter") keyName = "Enter";
+
+      keyName = keyName.toUpperCase();
+
+      if (!pressedKeys.includes(keyName)) {
+        setPressedKeys([...pressedKeys, keyName]);
+      }
     };
 
-    const handleKeyUp = (e) => {
-      let key = e.key;
-      if (key === " ") key = "Space";
-      if (key === "Control") key = "Ctrl";
-      setPressedKeys((prev) => {
-        const newKeys = new Set(prev);
-        newKeys.delete(key.toUpperCase());
-        return newKeys;
-      });
+    const onKeyUp = (event) => {
+      let keyName = event.key;
+
+      if (keyName === " ") keyName = "Space";
+      if (keyName === "Backspace") keyName = "Backspace";
+      if (keyName === "Enter") keyName = "Enter";
+
+      keyName = keyName.toUpperCase();
+
+      setPressedKeys(pressedKeys.filter((key) => key !== keyName));
     };
 
-    textarea.addEventListener("keydown", handleKeyDown);
-    textarea.addEventListener("keyup", handleKeyUp);
-    textarea.focus();
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
 
     return () => {
-      textarea.removeEventListener("keydown", handleKeyDown);
-      textarea.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
     };
-  }, []);
+  });
 
-  const isPressed = (key) => {
-    if (key === "Space") return pressedKeys.has("SPACE");
-    return pressedKeys.has(key.toUpperCase());
-  };
-
-  const getKeyClass = (key) => {
-    let className = "key";
-    if (isPressed(key)) className += " pressed";
-
-    if (key === "Backspace") className += " backspace";
-    else if (key === "Tab") className += " tab";
-    else if (key === "CapsLock") className += " caps";
-    else if (key === "Enter") className += " enter";
-    else if (key === "Shift") className += " shift";
-    else if (key === "Space") className += " space";
-    else if (key === "Ctrl" || key === "Alt") className += " modifier";
-
-    return className;
+  const isKeyPressed = (key) => {
+    return pressedKeys.includes(key.toUpperCase());
   };
 
   return (
-    <div className="keyboard-container">
+    <div className="container">
+      <h1>Simple Keyboard</h1>
+
       <textarea
-        ref={textareaRef}
         value={text}
         onChange={(e) => setText(e.target.value)}
+        placeholder="Start typing here..."
         className="text-area"
-        placeholder="Start typing..."
       />
 
       <div className="keyboard">
-        {keys.map((row, i) => (
-          <div key={i} className="keyboard-row">
-            {row.map((key, j) => (
-              <div key={j} className={getKeyClass(key)}>
-                {key === "Space" ? "" : key}
+        {keys.map((row, rowNumber) => (
+          <div key={rowNumber} className="row">
+            {row.map((key) => (
+              <div
+                key={key}
+                className={`key ${isKeyPressed(key) ? "pressed" : ""}`}
+              >
+                {key}
               </div>
             ))}
           </div>
