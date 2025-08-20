@@ -55,7 +55,7 @@ const ScreenKeyboard = () => {
 
   return (
     <div className="container">
-      <h1>Simple Keyboard</h1>
+      <h1>Custom Keyboard</h1>
 
       <textarea
         value={text}
