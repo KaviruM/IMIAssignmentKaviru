@@ -1,0 +1,102 @@
+.keyboard-container {
+  padding: 20px;
+  background-color: #1a1a1a;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.text-area {
+  width: 100%;
+  height: 120px;
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border: 2px solid #404040;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Consolas', 'Monaco', monospace;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.text-area:focus {
+  border-color: #0078d4;
+  box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+}
+
+.keyboard {
+  background-color: #2d2d2d;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.key {
+  height: 45px;
+  min-width: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #404040;
+  color: #ffffff;
+  border: 1px solid #555555;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  user-select: none;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.key:hover {
+  background-color: #4a4a4a;
+  transform: translateY(-1px);
+}
+
+.key.pressed {
+  background-color: #0078d4;
+  color: #ffffff;
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.key.backspace {
+  width: 80px;
+}
+
+.key.tab {
+  width: 70px;
+}
+
+.key.caps {
+  width: 85px;
+}
+
+.key.enter {
+  width: 90px;
+}
+
+.key.shift {
+  width: 95px;
+}
+
+.key.space {
+  width: 200px;
+}
+
+.key.modifier {
+  width: 60px;
+}

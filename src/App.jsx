@@ -35,6 +35,10 @@ import WallBall from "./assignments/WallBall.jsx";
 import SnakeGame from "./assignments/SnakeGame.jsx";
 import FlipMatch from "./assignments/FlipMatch.jsx";
 import StepScrollAnimation from "./assignments/StepScrollAnimation.jsx";
+import ItemSlider from "./assignments/ItemSlider.jsx"
+import WordJumbleGame from "./assignments/WordJumble.jsx";
+import CustomConsole from "./assignments/CustomConsole.jsx";
+import ScreenKeyboard from "./assignments/ScreenKeyboard.jsx";
 
 function HomePage() {
   return (
@@ -141,7 +145,19 @@ function HomePage() {
           <button>Flip Match</button>
         </Link>
         <Link to="step-scroll-animation">
-        <button>Step Scroll Animation</button>
+          <button>Step Scroll Animation</button>
+        </Link>
+        <Link to="item-slider">
+          <button>Item Slider</button>
+        </Link>
+        <Link to="/word-jumble">
+          <button>Word Jumble</button>
+        </Link>
+        <Link to="/Custom-Console">
+          <button>Custom Console</button>
+        </Link>
+        <Link to="/screen-keyboard">
+          <button>Screen Keyboard</button>
         </Link>
       </div>
     </div>
@@ -187,6 +203,10 @@ function App() {
         <Route path="/snake-game" element={<SnakeGame />} />
         <Route path="/flip-match" element={<FlipMatch />} />
         <Route path="/step-scroll-animation" element={<StepScrollAnimation />} />
+        <Route path="/item-Slider" element={<ItemSlider />} />
+        <Route path="/word-jumble" element={<WordJumbleGame />} />
+        <Route path="/Custom-Console" element={<CustomConsole />} />
+        <Route path="/screen-keyboard" element={<ScreenKeyboard />} />
       </Routes>
     </Router>
   );
