@@ -1,79 +1,129 @@
 import { useState, useEffect } from "react";
 import "./ScreenKeyboard.css";
 
-const ScreenKeyboard = () => {
+const ScreenBoard = () => {
   const [text, setText] = useState("");
   const [pressedKeys, setPressedKeys] = useState([]);
 
   const keys = [
-    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "Backspace"],
-    ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
-    ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
-    ["Z", "X", "C", "V", "B", "N", "M"],
-    ["Space"],
+    [
+      "~",
+      "1",
+      "@",
+      "#",
+      "$",
+      "%",
+      "^",
+      "&",
+      "*",
+      "(",
+      ")",
+      "-",
+      "+",
+      "Backspace",
+    ],
+    ["Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "|"],
+    [
+      "CapsLock",
+      "A",
+      "S",
+      "D",
+      "F",
+      "G",
+      "H",
+      "J",
+      "K",
+      "L",
+      ":",
+      '"',
+      "Enter",
+    ],
+    ["Shift", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?", "Shift"],
+    ["Ctrl", "Alt", "Space", "Alt", "Ctrl"],
   ];
 
   useEffect(() => {
-    const onKeyDown = (event) => {
-      let keyName = event.key;
+    const handleKeyDown = (e) => {
+      let key = e.key;
+      if (key === " ") key = "Space";
+      if (key === "Control") key = "Ctrl";
+      key = key.toUpperCase();
 
-      if (keyName === " ") keyName = "Space";
-      if (keyName === "Backspace") keyName = "Backspace";
-      if (keyName === "Enter") keyName = "Enter";
-
-      keyName = keyName.toUpperCase();
-
-      if (!pressedKeys.includes(keyName)) {
-        setPressedKeys([...pressedKeys, keyName]);
+      if (!pressedKeys.includes(key)) {
+        setPressedKeys([...pressedKeys, key]);
       }
     };
 
-    const onKeyUp = (event) => {
-      let keyName = event.key;
+    const handleKeyUp = (e) => {
+      let key = e.key;
+      if (key === " ") key = "Space";
+      if (key === "Control") key = "Ctrl";
+      key = key.toUpperCase();
 
-      if (keyName === " ") keyName = "Space";
-      if (keyName === "Backspace") keyName = "Backspace";
-      if (keyName === "Enter") keyName = "Enter";
-
-      keyName = keyName.toUpperCase();
-
-      setPressedKeys(pressedKeys.filter((key) => key !== keyName));
+      setPressedKeys(pressedKeys.filter((k) => k !== key));
     };
 
-    window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("keyup", onKeyUp);
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
 
     return () => {
-      window.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("keyup", onKeyUp);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
     };
-  });
+  }, [pressedKeys]);
 
-  const isKeyPressed = (key) => {
+  const handleKeyClick = (key) => {
+    if (key === "Backspace") {
+      setText(text.slice(0, -1));
+    } else if (key === "Enter") {
+      setText(text + "\n");
+    } else if (key === "Space") {
+      setText(text + " ");
+    } else if (key === "Tab") {
+      setText(text + "    ");
+    } else if (
+      key === "Shift" ||
+      key === "CapsLock" ||
+      key === "Ctrl" ||
+      key === "Alt"
+    ) {
+      return;
+    } else {
+      setText(text + key);
+    }
+
+    setPressedKeys([...pressedKeys, key]);
+    setTimeout(() => {
+      setPressedKeys(pressedKeys.filter((k) => k !== key));
+    }, 150);
+  };
+
+  const isPressed = (key) => {
     return pressedKeys.includes(key.toUpperCase());
   };
 
   return (
     <div className="container">
-      <h1>Custom Keyboard</h1>
-
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Start typing here..."
+        placeholder="Type your text here..."
         className="text-area"
       />
 
       <div className="keyboard">
-        {keys.map((row, rowNumber) => (
-          <div key={rowNumber} className="row">
+        {keys.map((row, index) => (
+          <div key={index} className="row">
             {row.map((key) => (
-              <div
+              <button
                 key={key}
-                className={`key ${isKeyPressed(key) ? "pressed" : ""}`}
+                onClick={() => handleKeyClick(key)}
+                className={`key ${key.toLowerCase()} ${
+                  isPressed(key) ? "pressed" : ""
+                }`}
               >
                 {key}
-              </div>
+              </button>
             ))}
           </div>
         ))}
@@ -82,4 +132,4 @@ const ScreenKeyboard = () => {
   );
 };
 
-export default ScreenKeyboard;
+export default ScreenBoard;
