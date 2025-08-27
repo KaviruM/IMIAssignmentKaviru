@@ -40,6 +40,7 @@ import WordJumbleGame from "./assignments/WordJumble.jsx";
 import CustomConsole from "./assignments/CustomConsole.jsx";
 import ScreenKeyboard from "./assignments/ScreenKeyboard.jsx";
 import SlideShow from "./assignments/SlideShow.jsx";
+import CustomVideoPlayer from "./assignments/CustomVideoPlayer.jsx";
 
 function HomePage() {
   return (
@@ -163,6 +164,9 @@ function HomePage() {
         <Link to="/slide-show">
           <button>Slide Show</button>
         </Link>
+        <Link to="/custom-video-player">
+          <button>Custom Video Player</button>
+        </Link>
       </div>
     </div>
   );
@@ -212,6 +216,7 @@ function App() {
         <Route path="/Custom-Console" element={<CustomConsole />} />
         <Route path="/screen-keyboard" element={<ScreenKeyboard />} />
         <Route path="/slide-show" element={<SlideShow />} />
+        <Route path="/custom-video-player" element={<CustomVideoPlayer />} />
       </Routes>
     </Router>
   );
