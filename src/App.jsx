@@ -41,6 +41,7 @@ import CustomConsole from "./assignments/CustomConsole.jsx";
 import ScreenKeyboard from "./assignments/ScreenKeyboard.jsx";
 import SlideShow from "./assignments/SlideShow.jsx";
 import CustomVideoPlayer from "./assignments/CustomVideoPlayer.jsx";
+import ZoomIN from "./assignments/ZoomIN.jsx";
 
 function HomePage() {
   return (
@@ -167,6 +168,9 @@ function HomePage() {
         <Link to="/custom-video-player">
           <button>Custom Video Player</button>
         </Link>
+        <Link to="/zoom-in">
+          <button>Zoom In</button>
+        </Link>
       </div>
     </div>
   );
@@ -217,6 +221,7 @@ function App() {
         <Route path="/screen-keyboard" element={<ScreenKeyboard />} />
         <Route path="/slide-show" element={<SlideShow />} />
         <Route path="/custom-video-player" element={<CustomVideoPlayer />} />
+        <Route path="/zoom-in" element={<ZoomIN />} />
       </Routes>
     </Router>
   );
