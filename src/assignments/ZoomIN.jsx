@@ -40,7 +40,7 @@ function ZoomIN() {
     const initialWidth = cardRect.width;
     const initialHeight = cardRect.height;
 
-    // Set initial position
+
     setAnimationStyle({
       position: 'absolute',
       left: `${initialX}px`,
@@ -53,7 +53,7 @@ function ZoomIN() {
 
     setExpandedCard(index);
 
-    // Animate to full size
+
     setTimeout(() => {
       setAnimationStyle(prev => ({
         ...prev,
@@ -84,7 +84,7 @@ function ZoomIN() {
     const targetWidth = cardRect.width;
     const targetHeight = cardRect.height;
 
-    // Animate back to original position
+
     setAnimationStyle(prev => ({
       ...prev,
       left: `${targetX}px`,
