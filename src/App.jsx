@@ -42,6 +42,7 @@ import ScreenKeyboard from "./assignments/ScreenKeyboard.jsx";
 import SlideShow from "./assignments/SlideShow.jsx";
 import CustomVideoPlayer from "./assignments/CustomVideoPlayer.jsx";
 import ZoomIN from "./assignments/ZoomIN.jsx";
+import CanvasVideoRec from "./assignments/CanvasVideoRec.jsx";
 
 function HomePage() {
   return (
@@ -171,6 +172,9 @@ function HomePage() {
         <Link to="/zoom-in">
           <button>Zoom In</button>
         </Link>
+        <Link to="/canvas-video-rec">
+          <button>Canvas Video Recorder</button>
+        </Link>
       </div>
     </div>
   );
@@ -222,6 +226,7 @@ function App() {
         <Route path="/slide-show" element={<SlideShow />} />
         <Route path="/custom-video-player" element={<CustomVideoPlayer />} />
         <Route path="/zoom-in" element={<ZoomIN />} />
+        <Route path="/canvas-video-rec" element={<CanvasVideoRec />} />
       </Routes>
     </Router>
   );
