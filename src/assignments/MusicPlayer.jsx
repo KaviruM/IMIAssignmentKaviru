@@ -9,7 +9,7 @@ export default function MusicPlayer() {
 
   // Load SRT file and parse subtitles
   useEffect(() => {
-    fetch('/Ordinary.srt')
+    fetch('./Ordinary.srt')
       .then(res => res.text())
       .then(text => {
         const parsed = parseSRT(text);
@@ -33,7 +33,7 @@ export default function MusicPlayer() {
       // timeline detection
       const timeLine = lines.find(line => line.includes('-->'));
       if (!timeLine) return null;
-      
+
       // extract start and end times
       const [start, end] = timeLine.split('-->').map(t => t.trim());
       const timeIndex = lines.indexOf(timeLine);
@@ -68,7 +68,7 @@ export default function MusicPlayer() {
       
       <div className="music-player-content">
         <audio
-          src="/src/assets/Ordinary.mp3"
+          src="./Ordinary.mp3"
           onTimeUpdate={(e) => setCurrentTime(e.target.currentTime)}
           controls
           className="music-player-audio"
