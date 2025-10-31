@@ -29,8 +29,6 @@ const CanvasVideoRec = () => {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
   }, []);
 
 
@@ -43,6 +41,7 @@ const CanvasVideoRec = () => {
 
     const ctx = canvas.getContext("2d");
     ctx.beginPath();
+    // ctx.arc(100, 75, 50, 0, 2 * Math.PI);
     ctx.moveTo(x, y);
   };
 
